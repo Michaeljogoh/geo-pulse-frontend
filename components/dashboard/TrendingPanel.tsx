@@ -59,7 +59,7 @@ const TrendingRow = memo(function TrendingRow({
 });
 
 
-/** Phase 8 — trending coins list. */
+/** Trending coins list. */
 export function TrendingPanel({ className }: { className?: string }) {
 	const { data: geo } = useGeo();
 	const vs = useEffectiveCurrency(geo?.currency);

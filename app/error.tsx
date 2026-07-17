@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-/** Phase 11 — unexpected render errors with retry. */
+/** Unexpected render errors with retry. */
 export default function Error({
 	error,
 	reset,

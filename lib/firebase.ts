@@ -2,7 +2,7 @@ import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 
 /**
- * Firebase Web app + Auth init (Section 7 / Phase 14).
+ * Firebase Web app + Auth init.
  * Client-only — guard against SSR. No Firestore client access.
  */
 

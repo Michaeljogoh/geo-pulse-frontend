@@ -6,7 +6,7 @@ import { DashboardInvoices } from '@/components/dashboard-invoices';
 import { DashboardStats } from '@/components/stats';
 import { Skeleton } from '@/components/ui/skeleton';
 
-/** Phase 13 — lazy-load Recharts bundles. */
+/** Lazy-load Recharts bundles for the billing demo charts. */
 const NetRevenueChart = dynamic(
 	() =>
 		import('@/components/net-revenue-chart').then((m) => m.NetRevenueChart),

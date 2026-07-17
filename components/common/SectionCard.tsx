@@ -10,7 +10,7 @@ import { DashboardCard } from '@/components/dashboard-card';
 import { cn } from '@/lib/utils';
 
 /**
- * Phase 5 / 13 — section wrapper matched to the dashboard lattice.
+ * Section wrapper matched to the dashboard lattice.
  * Uses region + h2 for accessible section structure.
  */
 export function SectionCard({

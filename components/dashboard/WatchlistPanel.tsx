@@ -96,7 +96,7 @@ const WatchlistRow = memo(function WatchlistRow({
 	);
 });
 
-/** Phase 15 — protected watchlist section. */
+/** Protected watchlist section. */
 export function WatchlistPanel({ className }: { className?: string }) {
 	const { status } = useAuth();
 	const { data: geo } = useGeo();

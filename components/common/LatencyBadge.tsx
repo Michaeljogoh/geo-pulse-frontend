@@ -1,7 +1,7 @@
 import { formatLatency } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
-/** Phase 6 — latency chip for meta footers. */
+/** Latency chip for meta footers. */
 export function LatencyBadge({
 	latencyMs,
 	className,

@@ -45,6 +45,14 @@ vi.mock('@/lib/firebase', () => ({
 
 vi.mock('firebase/auth', () => ({
 	GoogleAuthProvider: class GoogleAuthProvider {},
+	browserLocalPersistence: { type: 'LOCAL' },
+	browserSessionPersistence: { type: 'SESSION' },
+	setPersistence: async () => {},
+	createUserWithEmailAndPassword: async () => {
+		emitAuth(mockUser);
+		return { user: mockUser };
+	},
+	updateProfile: async () => {},
 	onAuthStateChanged: (
 		_auth: unknown,
 		callback: (user: MockUser | null) => void
@@ -85,7 +93,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	);
 }
 
-describe('Auth (Phase 14)', () => {
+describe('Auth', () => {
 	beforeEach(() => {
 		currentUser = null;
 		authListeners.clear();
@@ -93,26 +101,18 @@ describe('Auth (Phase 14)', () => {
 		vi.clearAllMocks();
 	});
 
-	it('shows Sign in when anonymous', async () => {
-		render(<AuthHeaderControls />, { wrapper: Wrapper });
+	it('renders nothing when anonymous', async () => {
+		const { container } = render(<AuthHeaderControls />, { wrapper: Wrapper });
 
 		await waitFor(() => {
-			expect(screen.getByRole('button', { name: /sign in/i })).toBeTruthy();
+			expect(screen.queryByRole('button', { name: /sign in/i })).toBeNull();
 		});
+		expect(container.querySelector('[aria-label="Loading account"]')).toBeNull();
 	});
 
-	it('after Google sign-in shows UserMenu and GET /api/me with Bearer token', async () => {
-		const user = userEvent.setup();
+	it('when signed in shows UserMenu and GET /api/me with Bearer token', async () => {
+		emitAuth(mockUser);
 		render(<AuthHeaderControls />, { wrapper: Wrapper });
-
-		await waitFor(() => {
-			expect(screen.getByRole('button', { name: /sign in/i })).toBeTruthy();
-		});
-
-		await user.click(screen.getByRole('button', { name: /sign in/i }));
-		await user.click(
-			await screen.findByRole('button', { name: /continue with google/i })
-		);
 
 		await waitFor(() => {
 			expect(
@@ -125,7 +125,7 @@ describe('Auth (Phase 14)', () => {
 		expect(me.data.email).toBe(mockAuthUser.email);
 	});
 
-	it('sign-out returns to anonymous Sign in', async () => {
+	it('sign-out clears the header auth slot', async () => {
 		const user = userEvent.setup();
 		emitAuth(mockUser);
 
@@ -143,7 +143,10 @@ describe('Auth (Phase 14)', () => {
 		await user.click(await screen.findByRole('menuitem', { name: /sign out/i }));
 
 		await waitFor(() => {
-			expect(screen.getByRole('button', { name: /sign in/i })).toBeTruthy();
+			expect(screen.queryByRole('button', { name: /sign in/i })).toBeNull();
+			expect(
+				screen.queryByRole('button', { name: /account menu/i })
+			).toBeNull();
 		});
 	});
 

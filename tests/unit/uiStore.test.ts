@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { useUiStore } from '@/store/uiStore';
 
-describe('uiStore (Phase 4)', () => {
+describe('uiStore', () => {
 	beforeEach(() => {
 		localStorage.clear();
 		useUiStore.persist.clearStorage();

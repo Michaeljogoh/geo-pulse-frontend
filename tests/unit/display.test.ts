@@ -6,7 +6,7 @@ import {
 	networkTypeLabel,
 } from '@/lib/display';
 
-describe('display helpers (Section 11)', () => {
+describe('display helpers', () => {
 	it('displayValue never fabricates — null/empty → — or Unknown', () => {
 		expect(displayValue(null)).toBe('—');
 		expect(displayValue(undefined)).toBe('—');

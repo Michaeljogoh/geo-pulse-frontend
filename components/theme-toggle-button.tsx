@@ -13,7 +13,7 @@ function useIsClient() {
 	);
 }
 
-/** Phase 1 — theme toggle that fits existing dashboard header controls. */
+/** Theme toggle for dashboard header controls. */
 export function ThemeToggleButton({
 	className,
 }: {

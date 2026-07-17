@@ -9,7 +9,7 @@ import { GeoPulseLogo } from '@/components/brand/geopulse-logo';
 
 /**
  * Layout Header — brand + currency + theme + auto-refresh + auth
- * (Section 10/11 map). Production chrome also uses `AppHeader`.
+ * Production chrome also uses `AppHeader`.
  */
 export function Header(_props?: { children?: ReactNode }) {
 	return (

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 const DEFAULT_MESSAGE =
 	'Live data unavailable — showing cached/last-known.';
 
-/** Phase 11 — non-blocking inline warning for degraded/cached sections. */
+/** Non-blocking inline warning for degraded/cached sections. */
 export function DegradedNotice({
 	message = DEFAULT_MESSAGE,
 	className,

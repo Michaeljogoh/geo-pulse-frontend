@@ -21,7 +21,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	);
 }
 
-describe('MarketOverview (Phase 7)', () => {
+describe('MarketOverview', () => {
 	beforeEach(() => {
 		useUiStore.setState({ currencyOverride: null, autoRefresh: true });
 		vi.clearAllMocks();

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 /**
- * Client UI prefs only (Section 7 / Phase 4).
+ * Client UI prefs only (currency override, auto-refresh, etc.).
  * Server data stays in TanStack Query. Theme is owned by next-themes.
  */
 type UiState = {

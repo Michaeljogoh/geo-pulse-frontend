@@ -1,6 +1,6 @@
 import type { NetworkType } from '@/types/domain';
 
-/** Map networkType → Tailwind token class (Section 8.2 semantic colors). */
+/** Map networkType → Tailwind semantic color class. */
 export function networkTypeColorClass(networkType: NetworkType): string {
 	switch (networkType) {
 		case 'residential':

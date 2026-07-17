@@ -14,6 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { CoinLogo, ProviderLogo } from "@/components/landing/asset-logos";
 import { Stagger, StaggerItem } from "@/components/landing/motion-section";
+import { useGeo } from "@/hooks/useGeo";
+import { displayValue, networkTypeLabel } from "@/lib/display";
+import { formatLatency } from "@/lib/format";
 import {
 	MARKET_PREVIEW,
 	PROVIDER_ASSETS,
@@ -54,16 +57,105 @@ function PreviewCard({
 	);
 }
 
+function VisitorIntelPreview() {
+	const { data, meta, isLoading, isError } = useGeo();
+
+	const location = data
+		? [displayValue(data.city, "Unknown"), displayValue(data.country, "Unknown")]
+				.filter((part) => part !== "Unknown")
+				.join(", ") || displayValue(data.country, "Unknown")
+		: null;
+
+	const timezoneCurrency = data
+		? `${displayValue(data.timezone, "Unknown")} · ${displayValue(data.currency, "—")}`
+		: null;
+
+	const confidencePct =
+		data?.confidence != null ? Math.round(data.confidence * 100) : null;
+
+	const latencyLabel =
+		meta?.latencyMs != null ? formatLatency(meta.latencyMs) : null;
+
+	return (
+		<>
+			<div className="mb-4 flex items-center justify-between gap-3">
+				<div className="flex items-center gap-2">
+					<GlobeIcon className="size-4 text-primary" />
+					<span className="text-caption-md font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+						Visitor Intel
+					</span>
+				</div>
+				<div className="flex items-center gap-2 text-caption-sm text-muted-foreground">
+					{!isError ? <LiveDot /> : null}
+					<span className="font-mono">
+						{isLoading
+							? "resolving…"
+							: isError
+								? "unavailable"
+								: latencyLabel
+									? `live · ${latencyLabel}`
+									: "live"}
+					</span>
+				</div>
+			</div>
+			{isLoading ? (
+				<div className="animate-pulse space-y-3">
+					<div className="space-y-2">
+						<div className="h-7 w-2/3 rounded-md bg-muted" />
+						<div className="h-4 w-1/2 rounded-md bg-muted" />
+					</div>
+					<div className="flex gap-2">
+						<div className="h-6 w-24 rounded-full bg-muted" />
+						<div className="h-6 w-28 rounded-full bg-muted" />
+					</div>
+					<div className="h-16 rounded-[var(--radius-md)] bg-muted/70" />
+				</div>
+			) : isError || !data ? (
+				<div className="space-y-2">
+					<p className="text-heading-lg font-semibold">Location unavailable</p>
+					<p className="text-body-sm text-muted-foreground">
+						We couldn’t resolve your IP right now. Try the dashboard for a
+						retry.
+					</p>
+				</div>
+			) : (
+				<div className="space-y-3">
+					<div>
+						<p className="text-heading-lg font-semibold">{location}</p>
+						<p className="text-body-sm text-muted-foreground">
+							{timezoneCurrency}
+						</p>
+					</div>
+					<div className="flex flex-wrap gap-2">
+						<span className="rounded-full bg-gain-bg px-2.5 py-1 text-caption-sm font-semibold capitalize text-gain dark:text-gain-bg">
+							{networkTypeLabel(data.networkType).toLowerCase()}
+						</span>
+						{confidencePct != null ? (
+							<span className="rounded-full bg-muted px-2.5 py-1 font-mono text-caption-sm text-muted-foreground">
+								confidence {confidencePct}%
+							</span>
+						) : null}
+					</div>
+					<div className="rounded-[var(--radius-md)] bg-muted/70 p-3 font-mono text-caption-sm text-muted-foreground">
+						<p>ISP · {displayValue(data.isp, "Unknown")}</p>
+						<p className="mt-1">ASN · {displayValue(data.asn, "—")}</p>
+					</div>
+				</div>
+			)}
+		</>
+	);
+}
+
 export function HeroPreview() {
 	const healthProviders = PROVIDER_ASSETS.filter((p) =>
-		["coingecko", "ip-api", "cryptopanic", "firestore"].includes(p.id)
+		["coingecko", "ip-api", "cryptocompare", "firestore"].includes(p.id)
 	);
 
 	return (
 		<div className="relative mx-auto w-full max-w-xl lg:max-w-none">
 			<div
 				aria-hidden="true"
-				className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-[radial-gradient(circle_at_30%_20%,rgb(230_0_35/0.12),transparent_55%),radial-gradient(circle_at_80%_0%,rgb(16_60_37/0.12),transparent_45%)]"
+				className="pointer-events-none absolute -inset-8 rounded-[3rem] bg-[radial-gradient(circle_at_30%_20%,rgb(74_21_75/0.12),transparent_55%),radial-gradient(circle_at_80%_0%,rgb(0_122_90/0.12),transparent_45%)]"
 			/>
 
 			{/* Floating crypto logos behind the cards */}
@@ -91,36 +183,7 @@ export function HeroPreview() {
 
 			<div className="relative grid gap-3 md:grid-cols-2 md:gap-4">
 				<PreviewCard delay={0.1} className="md:col-span-1">
-					<div className="mb-4 flex items-center justify-between gap-3">
-						<div className="flex items-center gap-2">
-							<GlobeIcon className="size-4 text-primary" />
-							<span className="text-caption-md font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-								Visitor Intel
-							</span>
-						</div>
-						<div className="flex items-center gap-2 text-caption-sm text-muted-foreground">
-							<LiveDot />
-							<span className="font-mono">live · 42ms</span>
-						</div>
-					</div>
-					<div className="space-y-3">
-						<div>
-							<p className="text-heading-lg font-semibold">Lagos, Nigeria</p>
-							<p className="text-body-sm text-muted-foreground">Africa/Lagos · NGN</p>
-						</div>
-						<div className="flex flex-wrap gap-2">
-							<span className="rounded-full bg-gain-bg px-2.5 py-1 text-caption-sm font-semibold text-gain dark:text-gain-bg">
-								residential
-							</span>
-							<span className="rounded-full bg-muted px-2.5 py-1 font-mono text-caption-sm text-muted-foreground">
-								confidence 94%
-							</span>
-						</div>
-						<div className="rounded-[var(--radius-md)] bg-muted/70 p-3 font-mono text-caption-sm text-muted-foreground">
-							<p>ISP · MTN Nigeria</p>
-							<p className="mt-1">ASN · AS29465</p>
-						</div>
-					</div>
+					<VisitorIntelPreview />
 				</PreviewCard>
 
 				<PreviewCard delay={0.18} className="md:col-span-1">
@@ -250,27 +313,27 @@ export function HeroSection() {
 			/>
 
 			<div className="landing-shell landing-section relative grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
-				<Stagger className="max-w-2xl">
+				<Stagger className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
 					<StaggerItem>
-						<p className="landing-pill mb-5 border border-border bg-card text-muted-foreground">
+						<p className="landing-pill mb-5 mx-auto border border-border bg-card text-muted-foreground lg:mx-0">
 							Crypto intelligence, tailored to you
 						</p>
 					</StaggerItem>
 					<StaggerItem>
-						<h1 className="text-display-lg md:text-display-xl max-w-[14ch] text-balance">
+						<h1 className="text-display-lg md:text-display-xl mx-auto max-w-[14ch] text-balance lg:mx-0">
 							Markets that know{" "}
 							<span className="text-primary">where you are.</span>
 						</h1>
 					</StaggerItem>
 					<StaggerItem>
-						<p className="mt-5 max-w-xl text-pretty text-body-md text-[color:var(--body)] dark:text-muted-foreground">
+						<p className="mt-5 mx-auto max-w-xl text-pretty text-body-md text-[color:var(--body)] dark:text-muted-foreground lg:mx-0">
 							GeoPulse detects your location and currency the moment you arrive,
 							then shows live prices, trending coins, and local crypto news in one
 							clear dashboard. Start free. No sign-up needed.
 						</p>
 					</StaggerItem>
 					<StaggerItem>
-						<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+						<div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
 							<Button
 								render={<Link href="/dashboard" />}
 								nativeButton={false}

@@ -19,6 +19,12 @@ vi.mock('@/lib/firebase', () => ({
 vi.mock('next/navigation', () => ({
 	useSearchParams: () => new URLSearchParams(),
 	usePathname: () => '/dashboard',
+	useRouter: () => ({
+		push: vi.fn(),
+		replace: vi.fn(),
+		prefetch: vi.fn(),
+		back: vi.fn(),
+	}),
 }));
 
 vi.mock('next/image', () => ({
@@ -35,7 +41,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	);
 }
 
-describe('Phase 13 a11y smoke', () => {
+describe('a11y smoke', () => {
 	beforeEach(() => {
 		Object.defineProperty(window, 'matchMedia', {
 			writable: true,

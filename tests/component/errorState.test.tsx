@@ -16,7 +16,7 @@ vi.mock('sonner', () => ({
 	},
 }));
 
-describe('ErrorState (Phase 12)', () => {
+describe('ErrorState', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});

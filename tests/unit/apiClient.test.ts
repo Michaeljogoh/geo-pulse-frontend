@@ -17,7 +17,7 @@ import {
 	testHandlers,
 } from '@/tests/msw/handlers';
 
-describe('api client (Phase 2)', () => {
+describe('api client', () => {
 	beforeEach(() => {
 		setAuthTokenProvider(null);
 		process.env.NEXT_PUBLIC_API_BASE_URL = 'http://localhost:8080';

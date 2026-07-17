@@ -12,7 +12,7 @@ import {
 } from '@/lib/format';
 import { deriveLocale } from '@/lib/locale';
 
-describe('Section 8.4 formatting', () => {
+describe('formatting helpers', () => {
 	it('formatCurrency uses Intl currency style', () => {
 		const out = formatCurrency(1234.5, 'USD', 'en-US');
 		expect(out).toContain('1,234.50');

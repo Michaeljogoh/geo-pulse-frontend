@@ -31,7 +31,7 @@ function mutationErrorMessage(error: unknown): string {
 	return 'Watchlist update failed';
 }
 
-/** Authed watchlist query + optimistic add/remove (Phase 15). */
+/** Authed watchlist query + optimistic add/remove. */
 export function useWatchlist(vs: string): QueryHookResult<WatchlistItem[]> & {
 	watchedIds: Set<string>;
 	addCoin: (coinId: string) => Promise<void>;

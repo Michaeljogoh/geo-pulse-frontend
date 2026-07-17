@@ -5,7 +5,7 @@ import { useDashboard } from '@/hooks/useDashboard';
 import { isResponseDegraded } from '@/lib/degraded';
 
 /**
- * Section 11 — global, non-blocking degraded signal from the aggregate payload.
+ * Global, non-blocking degraded signal from the aggregate dashboard payload.
  * Individual sections still show their own DegradedNotice; this never blanks the page.
  */
 export function DashboardDegradedBanner() {

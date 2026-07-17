@@ -16,7 +16,7 @@ import { VisitorIntelligenceCard } from '@/components/dashboard/VisitorIntellige
 import { WatchlistPanel } from '@/components/dashboard/WatchlistPanel';
 
 /**
- * GeoPulse dashboard composition (Phases 6–15 + Section 11).
+ * GeoPulse dashboard composition.
  * Sections fail independently — one API down never blanks the page.
  */
 export function Dashboard() {
@@ -44,14 +44,29 @@ export function Dashboard() {
 						</SectionCard>
 					}
 				>
-					<VisitorIntelligenceCard className="md:col-span-2" />
+					<div id="visitor" className="scroll-mt-20 md:col-span-2">
+						<VisitorIntelligenceCard />
+					</div>
 				</Suspense>
-				<ApiHealthPanel className="md:col-span-2" />
-				<MarketOverview className="lg:col-span-4" />
-				<WatchlistPanel className="lg:col-span-4" />
-				<TrendingPanel className="lg:col-span-2" />
-				<GainersLosers className="lg:col-span-2" />
-				<NewsFeed className="lg:col-span-4" />
+				<div id="health" className="scroll-mt-20 md:col-span-2">
+					<ApiHealthPanel />
+				</div>
+				<div id="market" className="scroll-mt-20 lg:col-span-4">
+					<MarketOverview />
+				</div>
+				<div id="watchlist" className="scroll-mt-20 lg:col-span-4">
+					<WatchlistPanel />
+				</div>
+				<div
+					id="trending"
+					className="scroll-mt-20 grid grid-cols-1 gap-px bg-border md:col-span-2 lg:col-span-4 lg:grid-cols-2"
+				>
+					<TrendingPanel />
+					<GainersLosers />
+				</div>
+				<div id="news" className="scroll-mt-20 lg:col-span-4">
+					<NewsFeed />
+				</div>
 			</div>
 		</div>
 	);

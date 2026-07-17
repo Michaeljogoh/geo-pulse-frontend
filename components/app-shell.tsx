@@ -4,20 +4,22 @@ import { AppHeader } from '@/components/app-header';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SkipToContent } from '@/components/common/SkipToContent';
 
-/** Phase 13 — landmarks: skip link, complementary nav, main. */
+/**
+ * Landmarks: skip link, complementary nav, main.
+ * Main fills SidebarInset so content expands when the sidebar collapses.
+ */
 export function AppShell({ children }: { children: React.ReactNode }) {
 	return (
-		<SidebarProvider className={cn('[--app-wrapper-max-width:80rem]')}>
+		<SidebarProvider>
 			<SkipToContent />
 			<AppSidebar />
-			<SidebarInset>
+			<SidebarInset className="min-w-0">
 				<AppHeader />
 				<main
 					id="main-content"
 					tabIndex={-1}
 					className={cn(
-						'flex flex-1 flex-col p-4 md:p-6',
-						'mx-auto w-full max-w-(--app-wrapper-max-width)',
+						'flex w-full min-w-0 flex-1 flex-col p-4 md:p-6',
 						'outline-none'
 					)}
 				>

@@ -22,7 +22,7 @@ function createWrapper() {
 	};
 }
 
-describe('Phase 3 query hooks', () => {
+describe('query hooks', () => {
 	beforeEach(() => {
 		useUiStore.setState({ currencyOverride: null, autoRefresh: true });
 		vi.useRealTimers();

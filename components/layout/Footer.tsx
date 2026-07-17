@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Container } from '@/components/layout/Container';
 
-/** Phase 5 — minimal footer matching dashboard chrome. */
+/** Minimal footer matching dashboard chrome. */
 export function Footer() {
 	return (
 		<footer className="mt-auto border-t border-border py-4 text-muted-foreground text-xs">

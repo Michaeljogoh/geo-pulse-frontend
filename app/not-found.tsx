@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-/** Phase 11 — route 404. */
+/** App-level 404 page. */
 export default function NotFound() {
 	return (
 		<main

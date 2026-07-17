@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { SectionCard } from '@/components/common/SectionCard';
 
-/** Phase 12 — visitor layout (flag/title + meter + field grid). */
+/** Visitor layout skeleton (flag/title + meter + field grid). */
 export function VisitorSkeleton() {
 	return (
 		<div className="space-y-4" data-slot="section-skeleton" data-section="visitor">
@@ -31,30 +31,45 @@ export function VisitorSkeleton() {
 	);
 }
 
-/** Phase 12 — provider rows + cache stats. */
+/** Provider cards + cache stats skeleton. */
 export function ApiHealthSkeleton() {
 	return (
-		<div className="space-y-3" data-slot="section-skeleton" data-section="api-health">
-			{Array.from({ length: 3 }).map((_, i) => (
-				<div key={i} className="flex items-center justify-between gap-3 py-1">
-					<div className="flex items-center gap-2">
-						<Skeleton className="size-2 rounded-full" />
-						<div className="space-y-1">
-							<Skeleton className="h-4 w-24" />
-							<Skeleton className="h-2.5 w-16" />
+		<div className="space-y-4" data-slot="section-skeleton" data-section="api-health">
+			<div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+				{Array.from({ length: 4 }).map((_, i) => (
+					<div
+						key={i}
+						className="space-y-3 rounded-md border border-hairline p-4 dark:border-border"
+					>
+						<div className="flex items-center justify-between gap-3">
+							<div className="flex items-center gap-2">
+								<Skeleton className="size-2.5 rounded-full" />
+								<div className="space-y-1">
+									<Skeleton className="h-4 w-24" />
+									<Skeleton className="h-2.5 w-16" />
+								</div>
+							</div>
+							<Skeleton className="h-6 w-16 rounded-full" />
+						</div>
+						<div className="grid grid-cols-3 gap-2">
+							{Array.from({ length: 3 }).map((_, j) => (
+								<div key={j} className="space-y-1">
+									<Skeleton className="h-2.5 w-12" />
+									<Skeleton className="h-4 w-10" />
+								</div>
+							))}
 						</div>
 					</div>
-					<div className="flex gap-3">
-						<Skeleton className="h-3 w-12" />
-						<Skeleton className="h-3 w-16" />
-					</div>
-				</div>
-			))}
-			<div className="grid grid-cols-3 gap-2 border-t border-border/60 pt-3">
+				))}
+			</div>
+			<div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
 				{Array.from({ length: 3 }).map((_, i) => (
-					<div key={i} className="space-y-1">
+					<div
+						key={i}
+						className="space-y-2 rounded-md border border-hairline px-3 py-3 dark:border-border"
+					>
 						<Skeleton className="h-2.5 w-14" />
-						<Skeleton className="h-4 w-10" />
+						<Skeleton className="h-6 w-12" />
 					</div>
 				))}
 			</div>
@@ -62,7 +77,7 @@ export function ApiHealthSkeleton() {
 	);
 }
 
-/** Phase 12 — market table rows. */
+/** Market table row skeletons. */
 export function MarketSkeleton({ rows = 6 }: { rows?: number }) {
 	return (
 		<div className="space-y-0" data-slot="section-skeleton" data-section="market">
@@ -93,7 +108,7 @@ export function MarketSkeleton({ rows = 6 }: { rows?: number }) {
 	);
 }
 
-/** Phase 12 — trending list rows. */
+/** Trending list row skeletons. */
 export function TrendingSkeleton({ rows = 4 }: { rows?: number }) {
 	return (
 		<ul
@@ -115,7 +130,7 @@ export function TrendingSkeleton({ rows = 4 }: { rows?: number }) {
 	);
 }
 
-/** Phase 12 — two-column movers. */
+/** Two-column movers skeleton. */
 export function GainersLosersSkeleton() {
 	return (
 		<div
@@ -141,7 +156,7 @@ export function GainersLosersSkeleton() {
 	);
 }
 
-/** Phase 12 — news card grid. */
+/** News card grid skeleton (up to 9 slots). */
 export function NewsSkeleton() {
 	return (
 		<div
@@ -149,7 +164,7 @@ export function NewsSkeleton() {
 			data-slot="section-skeleton"
 			data-section="news"
 		>
-			{Array.from({ length: 3 }).map((_, i) => (
+			{Array.from({ length: 9 }).map((_, i) => (
 				<div key={i} className="space-y-2">
 					<Skeleton className="h-4 w-full" />
 					<Skeleton className="h-4 w-4/5" />
@@ -164,7 +179,7 @@ export function NewsSkeleton() {
 }
 
 /**
- * Full-dashboard loading lattice (Phase 5 / 12).
+ * Full-dashboard loading lattice.
  * Mirrors live section layouts to limit layout shift.
  */
 export function LoadingSkeletons() {

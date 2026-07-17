@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { handlers } from '@/tests/msw/handlers';
 
 /**
- * Phase 16 inventory — MSW must cover every backend surface the client uses.
+ * MSW must cover every backend surface the client uses.
  * Path strings are matched loosely (absolute URLs in handlers).
  */
 describe('MSW endpoint coverage', () => {

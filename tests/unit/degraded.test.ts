@@ -5,7 +5,7 @@ import {
 	isSectionMetaDegraded,
 } from '@/lib/degraded';
 
-describe('degraded helpers (Phase 11)', () => {
+describe('degraded helpers', () => {
 	it('isResponseDegraded respects degraded flag and fallback source', () => {
 		expect(
 			isResponseDegraded({

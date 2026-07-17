@@ -18,7 +18,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	return createElement(QueryClientProvider, { client }, children);
 }
 
-describe('VisitorIntelligenceCard (Phase 6)', () => {
+describe('VisitorIntelligenceCard', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});

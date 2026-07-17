@@ -39,3 +39,12 @@ export const MARKET_LIMIT = 20;
 
 /** Rows in gainers/losers panels */
 export const GAINERS_LOSERS_COUNT = 7;
+
+/** News cards per page (3×3 grid) */
+export const NEWS_PAGE_SIZE = 9;
+
+/** Debounce delay for news search input */
+export const NEWS_SEARCH_DEBOUNCE_MS = 300;
+
+/** Max wait for news card images before revealing the grid */
+export const NEWS_IMAGE_PRELOAD_TIMEOUT_MS = 8_000;

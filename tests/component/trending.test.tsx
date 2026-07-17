@@ -17,7 +17,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	return createElement(QueryClientProvider, { client }, children);
 }
 
-describe('Trending & Gainers/Losers (Phase 8)', () => {
+describe('Trending & Gainers/Losers', () => {
 	beforeEach(() => {
 		useUiStore.setState({ currencyOverride: null, autoRefresh: true });
 		vi.clearAllMocks();

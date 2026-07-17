@@ -44,7 +44,7 @@ export function ProductShowcase() {
 		<MotionSection id="product" className="landing-section relative overflow-hidden">
 			<div
 				aria-hidden="true"
-				className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgb(230_0_35/0.08),transparent_55%)]"
+				className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgb(74_21_75/0.08),transparent_55%)]"
 			/>
 
 			<div className="landing-shell relative">
@@ -159,7 +159,8 @@ export function ProductShowcase() {
 									src={LANDING_IMAGES.dashboard}
 									alt="GeoPulse dashboard with visitor intelligence, live crypto markets, trending sectors, news, and analytics"
 									fill
-									priority={false}
+									priority
+									loading="eager"
 									sizes="(max-width: 1024px) 100vw, 1024px"
 									className="object-cover object-top"
 								/>

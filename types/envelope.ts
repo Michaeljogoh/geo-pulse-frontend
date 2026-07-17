@@ -1,9 +1,9 @@
 /**
- * Mirrored from `backend/apps/api/src/types/envelope.ts` (plan Section 7).
+ * Mirrored from backend envelope types.
  * Every endpoint except /health, /docs, /openapi.json returns ApiResponse<T>.
  */
 
-/** Error taxonomy codes (plan Section 8). */
+/** Stable error codes returned in the API envelope. */
 export type ErrorCode =
   | 'VALIDATION_ERROR'
   | 'UNAUTHENTICATED'

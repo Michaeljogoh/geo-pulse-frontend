@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	CardContent,
@@ -85,8 +86,15 @@ export function DashboardInvoices() {
 				</Table>
 			</CardContent>
 			<div className="mask-t-from-30% absolute inset-x-0 bottom-0 flex h-1/5 items-center justify-center bg-background">
-				<Button className="relative" variant="ghost" render={<a href="/#" />} nativeButton={false}>View All
-                						<ArrowRightIcon aria-hidden="true" /></Button>
+				<Button
+					className="relative"
+					variant="ghost"
+					render={<Link href="/dashboard" />}
+					nativeButton={false}
+				>
+					View All
+					<ArrowRightIcon aria-hidden="true" />
+				</Button>
 			</div>
 		</DashboardCard>
 	);

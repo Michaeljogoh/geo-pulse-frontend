@@ -34,7 +34,7 @@ const authContent: Record<
 	},
 	"sign-up": {
 		title: "Create an account",
-		description: "Get started — it only takes a moment.",
+		description: "Get started. It only takes a moment.",
 		submitLabel: "Create account",
 		alternatePrompt: "Already have an account?",
 		alternateHref: "/sign-in",

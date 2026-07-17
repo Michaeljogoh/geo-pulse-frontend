@@ -1,5 +1,5 @@
 /**
- * Backend API contract consumed by the frontend (plan Section 5 / backend Section 9).
+ * Backend API contract consumed by the frontend.
  * Base: `${NEXT_PUBLIC_API_BASE_URL}` — paths below are absolute from that origin.
  *
  * Strategy:
@@ -55,7 +55,7 @@ export type PublicEndpoints = {
   };
 };
 
-/** Authenticated endpoints (Phases 14–15). */
+/** Authenticated endpoints. */
 export type AuthedEndpoints = {
   'GET /api/me': {
     query: Record<string, never>;

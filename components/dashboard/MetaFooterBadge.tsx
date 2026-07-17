@@ -15,7 +15,7 @@ function sourceLabel(source: ResponseMeta['source']): string {
 	}
 }
 
-/** Phase 6 — source / provider / latency footer. */
+/** Source / provider / latency footer. */
 export function MetaFooterBadge({
 	meta,
 	confidence,

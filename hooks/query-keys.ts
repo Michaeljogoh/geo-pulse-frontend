@@ -1,6 +1,6 @@
 import type { GetNewsParams } from '@/lib/api/endpoints';
 
-/** TanStack Query keys (Phase 3) — keep stable and typed. */
+/** TanStack Query keys — keep stable and typed. */
 export const queryKeys = {
 	geo: (ip?: string) => ['geo', ip ?? null] as const,
 	market: (vs: string, limit: number) => ['market', vs.toLowerCase(), limit] as const,

@@ -11,15 +11,24 @@ import {
 } from 'react';
 import {
 	GoogleAuthProvider,
+	browserLocalPersistence,
+	browserSessionPersistence,
+	createUserWithEmailAndPassword,
 	onAuthStateChanged,
+	setPersistence,
 	signInWithEmailAndPassword,
 	signInWithPopup,
 	signOut as firebaseSignOut,
+	updateProfile,
 	type User,
 } from 'firebase/auth';
 
 import { getFirebaseAuth } from '@/lib/firebase';
 import { setAuthTokenProvider } from '@/lib/api/client';
+import {
+	clearAuthSessionCookie,
+	setAuthSessionCookie,
+} from '@/lib/auth-session-cookie';
 
 export type AuthStatus = 'loading' | 'authed' | 'anon';
 
@@ -31,11 +40,30 @@ export type AuthSessionUser = {
 	photoURL: string | null;
 };
 
+export type SignInOptions = {
+	/** Persist session across browser restarts (default true). */
+	persist?: boolean;
+};
+
+export type SignUpOptions = {
+	displayName?: string;
+	persist?: boolean;
+};
+
 export type AuthContextValue = {
 	user: AuthSessionUser | null;
 	status: AuthStatus;
-	signInWithGoogle: () => Promise<void>;
-	signInWithEmail: (email: string, password: string) => Promise<void>;
+	signInWithGoogle: (options?: SignInOptions) => Promise<void>;
+	signInWithEmail: (
+		email: string,
+		password: string,
+		options?: SignInOptions
+	) => Promise<void>;
+	signUpWithEmail: (
+		email: string,
+		password: string,
+		options?: SignUpOptions
+	) => Promise<void>;
 	signOut: () => Promise<void>;
 };
 
@@ -50,9 +78,18 @@ function mapUser(user: User): AuthSessionUser {
 	};
 }
 
+async function applyPersistence(persist: boolean): Promise<void> {
+	const auth = getFirebaseAuth();
+	await setPersistence(
+		auth,
+		persist ? browserLocalPersistence : browserSessionPersistence
+	);
+}
+
 /**
- * Phase 14 — Firebase Auth + API token provider.
+ * Firebase Auth + API token provider.
  * ID tokens are never stored in Zustand/localStorage; read on demand via getIdToken().
+ * Backend sync happens via authenticated GET /api/me (upsertOnLogin).
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState<AuthSessionUser | null>(null);
@@ -72,15 +109,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 			unsub = onAuthStateChanged(auth, (next) => {
 				if (next) {
+					setAuthSessionCookie();
 					setUser(mapUser(next));
 					setStatus('authed');
 				} else {
+					clearAuthSessionCookie();
 					setUser(null);
 					setStatus('anon');
 				}
 			});
 		} catch {
 			// Missing Firebase env in some test/dev contexts → treat as anonymous.
+			clearAuthSessionCookie();
 			setUser(null);
 			setStatus('anon');
 			setAuthTokenProvider(null);
@@ -92,15 +132,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		};
 	}, []);
 
-	const signInWithGoogle = useCallback(async () => {
+	const signInWithGoogle = useCallback(async (options?: SignInOptions) => {
+		await applyPersistence(options?.persist ?? true);
 		const auth = getFirebaseAuth();
 		await signInWithPopup(auth, new GoogleAuthProvider());
 	}, []);
 
-	const signInWithEmail = useCallback(async (email: string, password: string) => {
-		const auth = getFirebaseAuth();
-		await signInWithEmailAndPassword(auth, email.trim(), password);
-	}, []);
+	const signInWithEmail = useCallback(
+		async (email: string, password: string, options?: SignInOptions) => {
+			await applyPersistence(options?.persist ?? true);
+			const auth = getFirebaseAuth();
+			await signInWithEmailAndPassword(auth, email.trim(), password);
+		},
+		[]
+	);
+
+	const signUpWithEmail = useCallback(
+		async (email: string, password: string, options?: SignUpOptions) => {
+			await applyPersistence(options?.persist ?? true);
+			const auth = getFirebaseAuth();
+			const credential = await createUserWithEmailAndPassword(
+				auth,
+				email.trim(),
+				password
+			);
+			const name = options?.displayName?.trim();
+			if (name) {
+				await updateProfile(credential.user, { displayName: name });
+			}
+		},
+		[]
+	);
 
 	const signOut = useCallback(async () => {
 		const auth = getFirebaseAuth();
@@ -113,9 +175,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			status,
 			signInWithGoogle,
 			signInWithEmail,
+			signUpWithEmail,
 			signOut,
 		}),
-		[user, status, signInWithGoogle, signInWithEmail, signOut]
+		[
+			user,
+			status,
+			signInWithGoogle,
+			signInWithEmail,
+			signUpWithEmail,
+			signOut,
+		]
 	);
 
 	return (

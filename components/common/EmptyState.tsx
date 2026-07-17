@@ -1,4 +1,4 @@
-/** Honest empty section — used when lists have no rows (Phase 12). */
+/** Empty section — used when lists have no rows. */
 export function EmptyState({
 	title = 'Nothing here yet',
 	description = 'No items to show.',

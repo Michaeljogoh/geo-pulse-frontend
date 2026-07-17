@@ -17,7 +17,7 @@ import { ApiClientError } from '@/lib/api/client';
 import { isResponseDegraded } from '@/lib/degraded';
 import { deriveLocale } from '@/lib/locale';
 
-/** Phase 7 / 15 — market overview with optional watchlist stars when authed. */
+/** Market overview with optional watchlist stars when authed. */
 export function MarketOverview({ className }: { className?: string }) {
 	const { status } = useAuth();
 	const { data: geo } = useGeo();

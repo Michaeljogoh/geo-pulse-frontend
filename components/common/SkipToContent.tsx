@@ -1,4 +1,4 @@
-/** Phase 13 — keyboard skip to main content. */
+/** Keyboard skip link to main content. */
 export function SkipToContent({
 	href = '#main-content',
 }: {

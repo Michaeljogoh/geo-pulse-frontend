@@ -22,7 +22,7 @@ export function FinalCta() {
 				>
 					<div
 						aria-hidden="true"
-						className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgb(230_0_35/0.28),transparent_45%),radial-gradient(circle_at_90%_100%,rgb(16_60_37/0.35),transparent_40%)]"
+						className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgb(74_21_75/0.28),transparent_45%),radial-gradient(circle_at_90%_100%,rgb(0_122_90/0.35),transparent_40%)]"
 					/>
 					<div className="relative mx-auto max-w-3xl text-center">
 						<p className="landing-pill mx-auto mb-5 border border-white/15 bg-white/5 text-white/70">

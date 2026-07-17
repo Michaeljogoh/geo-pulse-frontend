@@ -4,7 +4,7 @@ import { networkTypeLabel } from '@/lib/display';
 import type { NetworkType } from '@/types/domain';
 import { cn } from '@/lib/utils';
 
-/** Phase 6 — colored badge per networkType. */
+/** Colored badge per networkType. */
 export function NetworkBadge({
 	networkType,
 	className,

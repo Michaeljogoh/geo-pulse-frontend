@@ -125,7 +125,7 @@ const MarketRow = memo(function MarketRow({
 	);
 });
 
-/** Phase 7 / 13 / 15 — market table; optional watchlist star column. */
+/** Market table; optional watchlist star column when authed. */
 export function MarketTable({
 	coins,
 	locale,

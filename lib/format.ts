@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@/config/constants';
 
 /**
- * Formatting helpers (Section 8.4) — deterministic.
+ * Deterministic formatting helpers for prices, percents, and ratios.
  *
  * Locale: `deriveLocale(countryCode)` → `DEFAULT_LOCALE` fallback (`lib/locale.ts`).
  * Currency: `resolveEffectiveCurrency(geo.currency, currencyOverride)` →

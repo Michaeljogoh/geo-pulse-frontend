@@ -16,7 +16,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	return createElement(QueryClientProvider, { client }, children);
 }
 
-describe('ApiHealthPanel (Phase 10)', () => {
+describe('ApiHealthPanel', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		vi.useRealTimers();
@@ -55,7 +55,7 @@ describe('ApiHealthPanel (Phase 10)', () => {
 						providers: [
 							{
 								...mockStatus.providers[0]!,
-								provider: 'cryptopanic',
+								provider: 'cryptocompare',
 								state: 'open',
 								avgLatencyMs: 900,
 							},
@@ -92,7 +92,7 @@ describe('ApiHealthPanel (Phase 10)', () => {
 		const openRow = document.querySelector(
 			'[data-slot="provider-row"][data-state="open"]'
 		);
-		expect(openRow?.textContent).toContain('cryptopanic');
+		expect(openRow?.textContent).toContain('cryptocompare');
 		expect(
 			openRow?.querySelector('[data-slot="circuit-dot"]')?.className
 		).toContain('bg-loss');

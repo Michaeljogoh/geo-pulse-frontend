@@ -14,6 +14,7 @@
 /coverage
 /graphify-out
 /.agents
+/DESIGN-slack.md
 
 # next.js
 /.next/

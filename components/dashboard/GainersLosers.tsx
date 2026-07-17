@@ -60,7 +60,7 @@ function CoinList({
 	);
 }
 
-/** Phase 8 / Section 11 — top gainers and losers lists (memoized rows). */
+/** Top gainers and losers lists (memoized rows). */
 export function GainersLosers({ className }: { className?: string }) {
 	const { data: geo } = useGeo();
 	const vs = useEffectiveCurrency(geo?.currency);

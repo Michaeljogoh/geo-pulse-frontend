@@ -2,7 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { createElement, type ReactNode } from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createQueryClient } from '@/components/providers';
 import { NewsFeed } from '@/components/dashboard/NewsFeed';
@@ -15,10 +15,29 @@ function Wrapper({ children }: { children: ReactNode }) {
 	return createElement(QueryClientProvider, { client }, children);
 }
 
-describe('NewsFeed (Phase 9)', () => {
+describe('NewsFeed', () => {
 	beforeEach(() => {
 		useUiStore.setState({ currencyOverride: null, autoRefresh: true });
 		vi.clearAllMocks();
+
+		vi.stubGlobal(
+			'Image',
+			class MockImage {
+				onload: (() => void) | null = null;
+				onerror: (() => void) | null = null;
+				complete = false;
+				set src(_value: string) {
+					this.complete = true;
+					queueMicrotask(() => {
+						this.onload?.();
+					});
+				}
+			}
+		);
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
 	});
 
 	it('renders news with source, relative time, and sentiment', async () => {
@@ -74,7 +93,7 @@ describe('NewsFeed (Phase 9)', () => {
 							imageUrl: null,
 						},
 					],
-					meta: { ...okMeta, provider: 'cryptopanic' },
+					meta: { ...okMeta, provider: 'cryptocompare' },
 					error: null,
 				})
 			)
@@ -101,7 +120,7 @@ describe('NewsFeed (Phase 9)', () => {
 			http.get(`${apiBase()}/api/news`, () =>
 				HttpResponse.json({
 					data: [],
-					meta: { ...okMeta, provider: 'cryptopanic' },
+					meta: { ...okMeta, provider: 'cryptocompare' },
 					error: null,
 				})
 			)

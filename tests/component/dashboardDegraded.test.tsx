@@ -25,7 +25,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	);
 }
 
-describe('Dashboard degraded composition (Phase 11)', () => {
+describe('Dashboard degraded composition', () => {
 	beforeEach(() => {
 		useUiStore.setState({ currencyOverride: null, autoRefresh: true });
 		vi.clearAllMocks();
@@ -37,7 +37,7 @@ describe('Dashboard degraded composition (Phase 11)', () => {
 				HttpResponse.json(
 					{
 						data: null,
-						meta: { ...okMeta, requestId: 'news-fail', provider: 'cryptopanic' },
+						meta: { ...okMeta, requestId: 'news-fail', provider: 'cryptocompare' },
 						error: {
 							code: 'UPSTREAM_ERROR',
 							message: 'News provider down',

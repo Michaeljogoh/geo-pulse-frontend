@@ -1,16 +1,12 @@
-import type { Metadata } from "next";
-import { AppShell } from "@/components/app-shell";
-import { Dashboard } from "@/components/dashboard/Dashboard";
+import type { Metadata } from 'next';
+import { OverviewPageClient } from '@/components/dashboard/pages/overview-page';
 
 export const metadata: Metadata = {
-	title: "Dashboard",
-	description: "GeoPulse personalized crypto intelligence dashboard.",
+	title: 'Overview',
+	description:
+		'Personalized market view for your location and currency across every GeoPulse signal.',
 };
 
-export default function DashboardPage() {
-	return (
-		<AppShell>
-			<Dashboard />
-		</AppShell>
-	);
+export default function OverviewPage() {
+	return <OverviewPageClient />;
 }

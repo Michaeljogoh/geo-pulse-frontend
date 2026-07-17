@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 type RetryResult = void | { isError?: boolean };
 
-/** Retryable error panel — toast on manual refresh success/failure (Phase 12). */
+/** Retryable error panel — toast on manual refresh success/failure. */
 export function ErrorState({
 	title = 'Something went wrong',
 	message = 'This section could not be loaded.',

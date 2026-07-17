@@ -1,6 +1,6 @@
 import type { ResponseMeta } from '@/types/envelope';
 
-/** Shared shape returned by Phase 3 data hooks. */
+/** Shared shape returned by data hooks. */
 export type QueryHookResult<T> = {
 	data: T | undefined;
 	meta: ResponseMeta | undefined;

@@ -99,7 +99,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 	);
 }
 
-describe('WatchlistPanel (Phase 15)', () => {
+describe('WatchlistPanel', () => {
 	beforeEach(() => {
 		currentUser = null;
 		authListeners.clear();

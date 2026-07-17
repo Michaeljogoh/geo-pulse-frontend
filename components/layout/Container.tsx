@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-/** Phase 5 — scaffold (Section 7). */
+/** Page width container for dashboard chrome. */
 export function Container({
 	children,
 	className,

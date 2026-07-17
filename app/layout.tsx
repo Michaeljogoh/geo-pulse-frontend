@@ -1,19 +1,13 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
+/** DESIGN-slack.md — Inter stands in for Salesforce Sans / Avant Garde. */
 const inter = Inter({
 	variable: '--font-inter',
 	subsets: ['latin'],
 	weight: ['400', '500', '600', '700'],
-	display: 'swap',
-});
-
-const spaceGrotesk = Space_Grotesk({
-	variable: '--font-space-grotesk',
-	subsets: ['latin'],
-	weight: ['500', '600', '700'],
 	display: 'swap',
 });
 
@@ -42,7 +36,7 @@ export default function RootLayout({
 		<html
 			lang="en"
 			suppressHydrationWarning
-			className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+			className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
 		>
 			<body className="flex min-h-full flex-col">
 				<Providers>{children}</Providers>

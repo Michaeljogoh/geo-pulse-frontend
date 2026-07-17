@@ -4,7 +4,7 @@ import { DEFAULT_CURRENCY, MARKET_LIMIT } from '@/config/constants';
 import { formatLatency, formatPercent } from '@/lib/format';
 
 describe('scaffold smoke', () => {
-	it('exposes Section 3 constants', () => {
+	it('exposes shared constants', () => {
 		expect(DEFAULT_CURRENCY).toBe('USD');
 		expect(MARKET_LIMIT).toBe(20);
 	});

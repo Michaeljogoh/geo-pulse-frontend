@@ -29,7 +29,7 @@ function SentimentBadge({
 	);
 }
 
-/** Phase 9 / 13 / Section 11 — news card with next/image + safe external links. */
+/** News card with next/image + safe external links. */
 export const NewsCard = memo(function NewsCard({ item }: { item: NewsItem }) {
 	return (
 		<article

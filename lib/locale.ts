@@ -1,7 +1,7 @@
 import { DEFAULT_LOCALE } from '@/config/constants';
 
 /**
- * Derive a BCP 47 locale from geo fields (Section 7 / Phase 6).
+ * Derive a BCP 47 locale from geo fields.
  * Falls back to DEFAULT_LOCALE when country is unknown.
  */
 export function deriveLocale(

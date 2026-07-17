@@ -76,10 +76,10 @@ export const PROVIDER_ASSETS: ProviderAsset[] = [
 		logo: "/integrations/ipwho.svg",
 	},
 	{
-		id: "cryptopanic",
-		name: "CryptoPanic",
+		id: "cryptocompare",
+		name: "CryptoCompare",
 		role: "Crypto news",
-		logo: "/integrations/cryptopanic.svg",
+		logo: "/integrations/cryptocompare.svg",
 	},
 	{
 		id: "gnews",

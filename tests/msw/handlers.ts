@@ -125,7 +125,7 @@ export const mockAuthUser: AuthUser = {
 	picture: null,
 };
 
-/** Mutable watchlist fixture for Phase 15 tests. */
+/** Mutable watchlist fixture for watchlist tests. */
 let watchlistStore: WatchlistItem[] = [];
 
 export function resetWatchlistStore(items: WatchlistItem[] = []) {
@@ -200,7 +200,7 @@ export const handlers = [
 	http.get(`${apiBase()}/api/news`, () =>
 		HttpResponse.json({
 			data: mockNews,
-			meta: { ...okMeta, provider: 'cryptopanic' },
+			meta: { ...okMeta, provider: 'cryptocompare' },
 			error: null,
 		})
 	),

@@ -11,6 +11,13 @@ vi.mock('@/lib/firebase', () => ({
 
 vi.mock('firebase/auth', () => ({
 	GoogleAuthProvider: class GoogleAuthProvider {},
+	browserLocalPersistence: { type: 'LOCAL' },
+	browserSessionPersistence: { type: 'SESSION' },
+	setPersistence: async () => {},
+	createUserWithEmailAndPassword: async () => {
+		throw new Error('createUserWithEmailAndPassword not mocked for this test');
+	},
+	updateProfile: async () => {},
 	onAuthStateChanged: (
 		_auth: unknown,
 		callback: (user: null) => void

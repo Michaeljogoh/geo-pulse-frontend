@@ -32,7 +32,7 @@ export type AuthTokenProvider = () => Promise<string | null> | string | null;
 
 let authTokenProvider: AuthTokenProvider | null = null;
 
-/** Injected in Phase 14 (AuthProvider). Returns a fresh Firebase ID token or null. */
+/** Injected by AuthProvider. Returns a fresh Firebase ID token or null. */
 export function setAuthTokenProvider(provider: AuthTokenProvider | null): void {
 	authTokenProvider = provider;
 }

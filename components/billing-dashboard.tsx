@@ -1,9 +1,31 @@
-import { BillingHealth } from "@/components/billing-health";
-import { ChannelSalesChart } from "@/components/channel-sales-chart";
-import { DashboardActivity } from "@/components/dashboard-activity";
-import { DashboardInvoices } from "@/components/dashboard-invoices";
-import { NetRevenueChart } from "@/components/net-revenue-chart";
-import { DashboardStats } from "@/components/stats";
+import dynamic from 'next/dynamic';
+
+import { BillingHealth } from '@/components/billing-health';
+import { DashboardActivity } from '@/components/dashboard-activity';
+import { DashboardInvoices } from '@/components/dashboard-invoices';
+import { DashboardStats } from '@/components/stats';
+import { Skeleton } from '@/components/ui/skeleton';
+
+/** Phase 13 — lazy-load Recharts bundles. */
+const NetRevenueChart = dynamic(
+	() =>
+		import('@/components/net-revenue-chart').then((m) => m.NetRevenueChart),
+	{
+		loading: () => <Skeleton className="min-h-92 w-full lg:col-span-2" />,
+		ssr: false,
+	}
+);
+
+const ChannelSalesChart = dynamic(
+	() =>
+		import('@/components/channel-sales-chart').then(
+			(m) => m.ChannelSalesChart
+		),
+	{
+		loading: () => <Skeleton className="min-h-92 w-full lg:col-span-2" />,
+		ssr: false,
+	}
+);
 
 export function Dashboard() {
 	return (

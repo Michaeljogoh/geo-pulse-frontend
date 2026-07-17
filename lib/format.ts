@@ -1,0 +1,63 @@
+import { formatDistanceToNow } from 'date-fns';
+
+import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@/config/constants';
+
+/**
+ * Formatting helpers (Section 8.4) — deterministic.
+ *
+ * Locale: `deriveLocale(countryCode)` → `DEFAULT_LOCALE` fallback (`lib/locale.ts`).
+ * Currency: `resolveEffectiveCurrency(geo.currency, currencyOverride)` →
+ *   Zustand override ?? geo.currency ?? `DEFAULT_CURRENCY`.
+ */
+
+/** Effective vs-currency for market/trending/watchlist queries and display. */
+export function resolveEffectiveCurrency(
+	geoCurrency: string | null | undefined,
+	currencyOverride: string | null | undefined = null
+): string {
+	const raw = currencyOverride ?? geoCurrency ?? DEFAULT_CURRENCY;
+	return raw.trim().toUpperCase() || DEFAULT_CURRENCY;
+}
+
+export function formatCurrency(
+	value: number,
+	currency: string,
+	locale: string = DEFAULT_LOCALE
+): string {
+	const code = currency.trim().toUpperCase() || DEFAULT_CURRENCY;
+	try {
+		return new Intl.NumberFormat(locale, {
+			style: 'currency',
+			currency: code,
+		}).format(value);
+	} catch {
+		return new Intl.NumberFormat(DEFAULT_LOCALE, {
+			style: 'currency',
+			currency: DEFAULT_CURRENCY,
+		}).format(value);
+	}
+}
+
+export function formatCompact(
+	value: number,
+	locale: string = DEFAULT_LOCALE
+): string {
+	return new Intl.NumberFormat(locale, {
+		notation: 'compact',
+		maximumFractionDigits: 2,
+	}).format(value);
+}
+
+/** Signed, 2 decimal places, `+` / `-` prefix. */
+export function formatPercent(value: number): string {
+	const sign = value > 0 ? '+' : '';
+	return `${sign}${value.toFixed(2)}%`;
+}
+
+export function formatRelativeTime(iso: string): string {
+	return formatDistanceToNow(new Date(iso), { addSuffix: true });
+}
+
+export function formatLatency(ms: number): string {
+	return `${Math.round(ms)} ms`;
+}

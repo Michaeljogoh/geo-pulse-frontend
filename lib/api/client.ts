@@ -37,7 +37,11 @@ export function setAuthTokenProvider(provider: AuthTokenProvider | null): void {
 	authTokenProvider = provider;
 }
 
-const REQUEST_TIMEOUT_MS = 10_000;
+function getRequestTimeoutMs(): number {
+	const raw = process.env.NEXT_PUBLIC_API_TIMEOUT_MS;
+	const parsed = raw ? Number(raw) : 10_000;
+	return Number.isFinite(parsed) && parsed > 0 ? parsed : 10_000;
+}
 
 type HttpMethod = 'GET' | 'PUT' | 'DELETE' | 'POST' | 'PATCH';
 
@@ -80,6 +84,18 @@ function buildUrl(
 	return url.toString();
 }
 
+function isAbortError(error: unknown): boolean {
+	if (typeof DOMException !== 'undefined' && error instanceof DOMException) {
+		return error.name === 'AbortError';
+	}
+	if (error instanceof Error) {
+		return (
+			error.name === 'AbortError' || /aborted/i.test(error.message)
+		);
+	}
+	return false;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -115,8 +131,9 @@ export async function apiRequest<T>(
 		headers['Content-Type'] = 'application/json';
 	}
 
+	const timeoutMs = getRequestTimeoutMs();
 	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+	const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
 	let response: Response;
 	try {
@@ -128,10 +145,12 @@ export async function apiRequest<T>(
 		});
 	} catch (error) {
 		clearTimeout(timeoutId);
-		if (error instanceof DOMException && error.name === 'AbortError') {
-			throw new ApiClientError('TIMEOUT', 'Request timed out after 10s', {
-				status: null,
-			});
+		if (isAbortError(error)) {
+			throw new ApiClientError(
+				'TIMEOUT',
+				`Request timed out after ${timeoutMs}ms`,
+				{ status: null }
+			);
 		}
 		throw new ApiClientError(
 			'NETWORK_ERROR',

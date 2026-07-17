@@ -1,36 +1,67 @@
-import type { ReactNode } from 'react';
+'use client';
+
+import { useId, type ReactNode } from 'react';
+import {
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import { DashboardCard } from '@/components/dashboard-card';
 import { cn } from '@/lib/utils';
 
-/** Phase 5 — titled card with optional meta slot (Section 7 scaffold). */
+/**
+ * Phase 5 / 13 — section wrapper matched to the dashboard lattice.
+ * Uses region + h2 for accessible section structure.
+ */
 export function SectionCard({
 	title,
 	meta,
 	children,
 	className,
+	contentClassName,
 }: {
 	title?: ReactNode;
 	meta?: ReactNode;
 	children?: ReactNode;
 	className?: string;
+	contentClassName?: string;
 }) {
+	const titleId = useId();
+	const labelledBy =
+		typeof title === 'string' ? titleId : undefined;
+
 	return (
-		<section
-			className={cn(
-				'rounded-[var(--radius-md)] border border-border bg-card text-card-foreground',
-				className
-			)}
+		<DashboardCard
+			role="region"
+			aria-labelledby={labelledBy}
+			className={cn('min-h-48', className)}
 		>
 			{(title || meta) && (
-				<header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
+				<CardHeader className="flex flex-row items-start justify-between gap-3 border-b border-border/60 [.border-b]:pb-3">
 					{title ? (
-						<h2 className="text-heading-md text-foreground">{title}</h2>
+						typeof title === 'string' ? (
+							<h2
+								id={titleId}
+								className="font-heading text-xs leading-snug font-normal tracking-wide"
+							>
+								{title}
+							</h2>
+						) : (
+							<CardTitle className="font-normal text-xs tracking-wide">
+								{title}
+							</CardTitle>
+						)
 					) : (
 						<span />
 					)}
-					{meta}
-				</header>
+					{meta ? (
+						<div className="text-muted-foreground text-xs">{meta}</div>
+					) : null}
+				</CardHeader>
 			)}
-			<div className="p-4">{children}</div>
-		</section>
+			<CardContent className={cn('pt-0', contentClassName)}>
+				{children}
+			</CardContent>
+		</DashboardCard>
 	);
 }

@@ -61,3 +61,18 @@ export function formatRelativeTime(iso: string): string {
 export function formatLatency(ms: number): string {
 	return `${Math.round(ms)} ms`;
 }
+
+/** Uptime for API health panel. */
+export function formatUptime(seconds: number): string {
+	if (seconds < 60) return `${Math.round(seconds)}s`;
+	const minutes = Math.floor(seconds / 60);
+	if (minutes < 60) return `${minutes}m`;
+	const hours = Math.floor(minutes / 60);
+	const rem = minutes % 60;
+	return rem > 0 ? `${hours}h ${rem}m` : `${hours}h`;
+}
+
+/** Cache hit ratio 0–1 → percent label. */
+export function formatHitRatio(ratio: number): string {
+	return `${Math.round(ratio * 100)}%`;
+}

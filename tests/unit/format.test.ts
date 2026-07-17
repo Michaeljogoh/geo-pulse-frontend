@@ -4,8 +4,10 @@ import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@/config/constants';
 import {
 	formatCompact,
 	formatCurrency,
+	formatHitRatio,
 	formatLatency,
 	formatPercent,
+	formatUptime,
 	resolveEffectiveCurrency,
 } from '@/lib/format';
 import { deriveLocale } from '@/lib/locale';
@@ -29,6 +31,13 @@ describe('Section 8.4 formatting', () => {
 
 	it('formatLatency appends ms', () => {
 		expect(formatLatency(42.2)).toBe('42 ms');
+	});
+
+	it('formatUptime and formatHitRatio', () => {
+		expect(formatUptime(45)).toBe('45s');
+		expect(formatUptime(120)).toBe('2m');
+		expect(formatUptime(3660)).toBe('1h 1m');
+		expect(formatHitRatio(0.5)).toBe('50%');
 	});
 
 	it('resolveEffectiveCurrency: override → geo → default', () => {

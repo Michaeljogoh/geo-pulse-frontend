@@ -4,6 +4,41 @@ GeoPulse is an **IP-personalized crypto intelligence dashboard**. It shows live 
 
 The browser talks to the GeoPulse API directly so personalization stays accurate.
 
+## Tools & APIs
+
+### Client services
+
+| | Service | Role |
+| :---: | --- | --- |
+| <img src="https://cdn.simpleicons.org/express/000000" alt="GeoPulse API" height="36" /> | **GeoPulse Backend API** | All product data via `NEXT_PUBLIC_API_BASE_URL` |
+| <img src="public/integrations/firebase.svg" alt="Firebase" height="36" /> | **[Firebase Auth](https://firebase.google.com/products/auth)** | Email/password + Google sign-in; ID tokens for watchlist |
+| <img src="public/integrations/firestore.svg" alt="Firestore" height="36" /> | **[Cloud Firestore](https://firebase.google.com/products/firestore)** | Account-backed watchlists (via API) |
+
+### Data providers (via backend)
+
+| | Service | Role |
+| :---: | --- | --- |
+| <img src="public/integrations/ip-api.svg" alt="ip-api" height="36" /> | **[ip-api](https://ip-api.com)** | Visitor location & network |
+| <img src="public/integrations/ipwho.svg" alt="ipwho.is" height="36" /> | **[ipwho.is](https://ipwho.is)** | Geo fallback |
+| <img src="public/integrations/coingecko.svg" alt="CoinGecko" height="36" /> | **[CoinGecko](https://www.coingecko.com/en/api)** | Markets, trending, prices |
+| <img src="public/integrations/cryptocompare.svg" alt="CryptoCompare" height="36" /> | **[CryptoCompare](https://www.cryptocompare.com)** | Crypto news |
+| <img src="public/integrations/gnews.svg" alt="GNews" height="36" /> | **[GNews](https://gnews.io)** | Regional news fallback |
+
+### Core stack
+
+| | Tool | Role |
+| :---: | --- | --- |
+| <img src="https://cdn.simpleicons.org/nextdotjs/000000" alt="Next.js" height="36" /> | **[Next.js](https://nextjs.org)** 16 | App Router UI |
+| <img src="https://cdn.simpleicons.org/react/61DAFB" alt="React" height="36" /> | **[React](https://react.dev)** 19 | Components |
+| <img src="https://cdn.simpleicons.org/typescript/3178C6" alt="TypeScript" height="36" /> | **[TypeScript](https://www.typescriptlang.org)** | Typed client + UI |
+| <img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" alt="Tailwind CSS" height="36" /> | **[Tailwind CSS](https://tailwindcss.com)** 4 | Styling |
+| <img src="https://cdn.simpleicons.org/reactquery/FF4154" alt="TanStack Query" height="36" /> | **[TanStack Query](https://tanstack.com/query)** | Server state / fetching |
+| <img src="https://cdn.simpleicons.org/zustand/443E38" alt="Zustand" height="36" /> | **[Zustand](https://zustand-demo.pmnd.rs)** | UI prefs (currency, refresh) |
+| <img src="https://cdn.simpleicons.org/zod/3E67B1" alt="Zod" height="36" /> | **[Zod](https://zod.dev)** | API response validation |
+| <img src="https://cdn.simpleicons.org/recharts/8884D8" alt="Recharts" height="36" /> | **[Recharts](https://recharts.org)** | Overview chart |
+| <img src="https://cdn.simpleicons.org/vitest/6E9F18" alt="Vitest" height="36" /> | **[Vitest](https://vitest.dev)** + MSW | Component / unit tests |
+| <img src="https://cdn.simpleicons.org/vercel/000000" alt="Vercel" height="36" /> | **[Vercel](https://vercel.com)** | Typical frontend hosting |
+
 ## Related repositories
 
 | Repo | Link |

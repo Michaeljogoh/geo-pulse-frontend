@@ -48,9 +48,14 @@ function InsightSkeleton() {
 	);
 }
 
-function ChartSkeleton() {
+/** Chart placeholder used by overview progressive loading. */
+export function OverviewChartSkeleton() {
 	return (
-		<section className={cn(cardClass, 'p-5 sm:p-6')}>
+		<section
+			aria-busy="true"
+			aria-label="Market value chart loading"
+			className={cn(cardClass, 'p-5 sm:p-6')}
+		>
 			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<div className="space-y-2">
 					<div className="flex items-center gap-2">
@@ -84,7 +89,7 @@ function PageSkeletonShell({ children }: { children: ReactNode }) {
 export function OverviewPageSkeleton() {
 	return (
 		<PageSkeletonShell>
-			<ChartSkeleton />
+			<OverviewChartSkeleton />
 			<InsightSkeleton />
 			<section className="space-y-3">
 				<div className="space-y-2">

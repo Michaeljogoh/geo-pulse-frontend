@@ -3,7 +3,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
 import {
 	ArrowUpRightIcon,
 	GlobeIcon,
@@ -13,69 +12,29 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CoinLogo, ProviderLogo } from "@/components/landing/asset-logos";
-import { Stagger, StaggerItem } from "@/components/landing/motion-section";
-import { useGeo } from "@/hooks/useGeo";
-import { displayValue, networkTypeLabel } from "@/lib/display";
-import { formatLatency } from "@/lib/format";
 import {
 	MARKET_PREVIEW,
 	PROVIDER_ASSETS,
 	TRENDING_PREVIEW,
 } from "@/lib/landing-assets";
 import { cn } from "@/lib/utils";
-import { springSoft } from "@/lib/motion";
-
-function LiveDot() {
-	return (
-		<span className="relative flex size-2">
-			<span className="absolute inline-flex size-full animate-ping rounded-full bg-gain opacity-40" />
-			<span className="relative inline-flex size-2 rounded-full bg-gain" />
-		</span>
-	);
-}
 
 function PreviewCard({
 	className,
 	children,
-	delay = 0,
 }: {
 	className?: string;
 	children: ReactNode;
-	delay?: number;
 }) {
-	const prefersReducedMotion = useReducedMotion();
-
 	return (
-		<motion.div
-			className={cn("landing-bezel-outer", className)}
-			initial={prefersReducedMotion ? false : { opacity: 0, y: 24, scale: 0.96 }}
-			animate={{ opacity: 1, y: 0, scale: 1 }}
-			transition={{ ...springSoft, delay }}
-		>
+		<div className={cn("landing-bezel-outer", className)}>
 			<div className="landing-bezel-inner p-4 md:p-5">{children}</div>
-		</motion.div>
+		</div>
 	);
 }
 
+/** Static marketing preview — no live geo, no IP/ISP/ASN. */
 function VisitorIntelPreview() {
-	const { data, meta, isLoading, isError } = useGeo();
-
-	const location = data
-		? [displayValue(data.city, "Unknown"), displayValue(data.country, "Unknown")]
-				.filter((part) => part !== "Unknown")
-				.join(", ") || displayValue(data.country, "Unknown")
-		: null;
-
-	const timezoneCurrency = data
-		? `${displayValue(data.timezone, "Unknown")} · ${displayValue(data.currency, "—")}`
-		: null;
-
-	const confidencePct =
-		data?.confidence != null ? Math.round(data.confidence * 100) : null;
-
-	const latencyLabel =
-		meta?.latencyMs != null ? formatLatency(meta.latencyMs) : null;
-
 	return (
 		<>
 			<div className="mb-4 flex items-center justify-between gap-3">
@@ -85,63 +44,31 @@ function VisitorIntelPreview() {
 						Visitor Intel
 					</span>
 				</div>
-				<div className="flex items-center gap-2 text-caption-sm text-muted-foreground">
-					{!isError ? <LiveDot /> : null}
-					<span className="font-mono">
-						{isLoading
-							? "resolving…"
-							: isError
-								? "unavailable"
-								: latencyLabel
-									? `live · ${latencyLabel}`
-									: "live"}
-					</span>
-				</div>
+				<span className="font-mono text-caption-sm text-muted-foreground">
+					preview
+				</span>
 			</div>
-			{isLoading ? (
-				<div className="animate-pulse space-y-3">
-					<div className="space-y-2">
-						<div className="h-7 w-2/3 rounded-md bg-muted" />
-						<div className="h-4 w-1/2 rounded-md bg-muted" />
-					</div>
-					<div className="flex gap-2">
-						<div className="h-6 w-24 rounded-full bg-muted" />
-						<div className="h-6 w-28 rounded-full bg-muted" />
-					</div>
-					<div className="h-16 rounded-[var(--radius-md)] bg-muted/70" />
-				</div>
-			) : isError || !data ? (
-				<div className="space-y-2">
-					<p className="text-heading-lg font-semibold">Location unavailable</p>
+			<div className="space-y-3">
+				<div>
+					<p className="text-heading-lg font-semibold">Lagos, Nigeria</p>
 					<p className="text-body-sm text-muted-foreground">
-						We couldn’t resolve your IP right now. Try the dashboard for a
-						retry.
+						Africa/Lagos · NGN
 					</p>
 				</div>
-			) : (
-				<div className="space-y-3">
-					<div>
-						<p className="text-heading-lg font-semibold">{location}</p>
-						<p className="text-body-sm text-muted-foreground">
-							{timezoneCurrency}
-						</p>
-					</div>
-					<div className="flex flex-wrap gap-2">
-						<span className="rounded-full bg-gain-bg px-2.5 py-1 text-caption-sm font-semibold capitalize text-gain dark:text-gain-bg">
-							{networkTypeLabel(data.networkType).toLowerCase()}
-						</span>
-						{confidencePct != null ? (
-							<span className="rounded-full bg-muted px-2.5 py-1 font-mono text-caption-sm text-muted-foreground">
-								confidence {confidencePct}%
-							</span>
-						) : null}
-					</div>
-					<div className="rounded-[var(--radius-md)] bg-muted/70 p-3 font-mono text-caption-sm text-muted-foreground">
-						<p>ISP · {displayValue(data.isp, "Unknown")}</p>
-						<p className="mt-1">ASN · {displayValue(data.asn, "—")}</p>
-					</div>
+				<div className="flex flex-wrap gap-2">
+					<span className="rounded-full bg-gain-bg px-2.5 py-1 text-caption-sm font-semibold capitalize text-gain dark:text-gain-bg">
+						mobile
+					</span>
+					<span className="rounded-full bg-muted px-2.5 py-1 font-mono text-caption-sm text-muted-foreground">
+						confidence 98%
+					</span>
 				</div>
-			)}
+				{/* Same footprint as the old ISP/ASN block — product context only */}
+				<div className="flex min-h-16 flex-col justify-center rounded-[var(--radius-md)] bg-muted/70 p-3 font-mono text-caption-sm text-muted-foreground">
+					<p>Market · priced in NGN</p>
+					<p className="mt-1">News · regional headlines</p>
+				</div>
+			</div>
 		</>
 	);
 }
@@ -182,11 +109,11 @@ export function HeroPreview() {
 			</div>
 
 			<div className="relative grid gap-3 md:grid-cols-2 md:gap-4">
-				<PreviewCard delay={0.1} className="md:col-span-1">
+				<PreviewCard className="md:col-span-1">
 					<VisitorIntelPreview />
 				</PreviewCard>
 
-				<PreviewCard delay={0.18} className="md:col-span-1">
+				<PreviewCard className="md:col-span-1">
 					<div className="mb-4 flex items-center justify-between">
 						<div className="flex items-center gap-2">
 							<TrendingUpIcon className="size-4 text-primary" />
@@ -233,7 +160,7 @@ export function HeroPreview() {
 					</div>
 				</PreviewCard>
 
-				<PreviewCard delay={0.26} className="md:col-span-2">
+				<PreviewCard className="md:col-span-2">
 					<div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">
 						<div>
 							<div className="mb-3 flex items-center gap-2">
@@ -299,8 +226,6 @@ export function HeroPreview() {
 }
 
 export function HeroSection() {
-	const prefersReducedMotion = useReducedMotion();
-
 	return (
 		<section className="relative overflow-hidden pt-28 md:pt-32">
 			<div
@@ -313,61 +238,45 @@ export function HeroSection() {
 			/>
 
 			<div className="landing-shell landing-section relative grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
-				<Stagger className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
-					<StaggerItem>
-						<p className="landing-pill mb-5 mx-auto border border-border bg-card text-muted-foreground lg:mx-0">
-							Crypto intelligence, tailored to you
-						</p>
-					</StaggerItem>
-					<StaggerItem>
-						<h1 className="text-display-lg md:text-display-xl mx-auto max-w-[14ch] text-balance lg:mx-0">
-							Markets that know{" "}
-							<span className="text-primary">where you are.</span>
-						</h1>
-					</StaggerItem>
-					<StaggerItem>
-						<p className="mt-5 mx-auto max-w-xl text-pretty text-body-md text-[color:var(--body)] dark:text-muted-foreground lg:mx-0">
-							GeoPulse detects your location and currency the moment you arrive,
-							then shows live prices, trending coins, and local crypto news in one
-							clear dashboard. Start free. No sign-up needed.
-						</p>
-					</StaggerItem>
-					<StaggerItem>
-						<div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
-							<Button
-								render={<Link href="/dashboard" />}
-								nativeButton={false}
-								className="group h-11 rounded-full px-5 text-button-md text-white active:scale-[0.98]"
-							>
-								Try GeoPulse free
-								<span className="ml-2 inline-flex size-7 items-center justify-center rounded-full bg-white/15 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-px">
-									<ArrowUpRightIcon className="size-3.5 text-white" />
-								</span>
-							</Button>
-							<Button
-								render={<Link href="#product" />}
-								nativeButton={false}
-								variant="secondary"
-								className="h-11 rounded-full bg-ink px-5 text-button-md text-white hover:bg-ink/90"
-							>
-								See how it works
-							</Button>
-						</div>
-					</StaggerItem>
-					<StaggerItem>
-						<p className="mt-5 text-caption-sm text-muted-foreground">
-							Free to explore · Instant personalization · Sign in to save a watchlist
-						</p>
-					</StaggerItem>
-				</Stagger>
+				<div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
+					<p className="landing-pill mb-5 mx-auto border border-border bg-card text-muted-foreground lg:mx-0">
+						Crypto intelligence, tailored to you
+					</p>
+					<h1 className="text-display-lg md:text-display-xl mx-auto max-w-[14ch] text-balance lg:mx-0">
+						Markets that know{" "}
+						<span className="text-primary">where you are.</span>
+					</h1>
+					<p className="mt-5 mx-auto max-w-xl text-pretty text-body-md text-[color:var(--body)] dark:text-muted-foreground lg:mx-0">
+						GeoPulse detects your location and currency the moment you arrive,
+						then shows live prices, trending coins, and local crypto news in one
+						clear dashboard. Start free. No sign-up needed.
+					</p>
+					<div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+						<Button
+							render={<Link href="/dashboard" />}
+							nativeButton={false}
+							className="group h-11 rounded-full px-5 text-button-md text-white active:scale-[0.98]"
+						>
+							Try GeoPulse free
+							<span className="ml-2 inline-flex size-7 items-center justify-center rounded-full bg-white/15 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-px">
+								<ArrowUpRightIcon className="size-3.5 text-white" />
+							</span>
+						</Button>
+						<Button
+							render={<Link href="#product" />}
+							nativeButton={false}
+							variant="secondary"
+							className="h-11 rounded-full bg-ink px-5 text-button-md text-white hover:bg-ink/90"
+						>
+							See how it works
+						</Button>
+					</div>
+					<p className="mt-5 text-caption-sm text-muted-foreground">
+						Free to explore · Instant personalization · Sign in to save a watchlist
+					</p>
+				</div>
 
-				<motion.div
-					initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ ...springSoft, delay: 0.15 }}
-				>
-					<HeroPreview />
-				</motion.div>
+				<HeroPreview />
 			</div>
 		</section>
 	);

@@ -1,12 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+
 import { DegradedNotice } from '@/components/common/DegradedNotice';
 import { SectionCard } from '@/components/common/SectionCard';
 import { VisitorSkeleton } from '@/components/common/LoadingSkeletons';
 import { ErrorState } from '@/components/common/ErrorState';
 import { NetworkBadge } from '@/components/dashboard/NetworkBadge';
 import { MetaFooterBadge } from '@/components/dashboard/MetaFooterBadge';
+import { Button } from '@/components/ui/button';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useGeo } from '@/hooks/useGeo';
 import { countryFlagEmoji, displayValue } from '@/lib/display';
 import { ApiClientError } from '@/lib/api/client';
@@ -85,7 +94,7 @@ function ConfidenceMeter({
 					inverted ? 'bg-white/20' : 'bg-muted'
 				)}
 				role="meter"
-				aria-label="IP confidence"
+				aria-label="Location confidence"
 				aria-valuenow={pct}
 				aria-valuemin={0}
 				aria-valuemax={100}
@@ -102,6 +111,68 @@ function ConfidenceMeter({
 	);
 }
 
+function SensitiveDetailsToggle({
+	revealed,
+	onToggle,
+	inverted,
+}: {
+	revealed: boolean;
+	onToggle: () => void;
+	inverted: boolean;
+}) {
+	const label = revealed
+		? 'Hide sensitive details'
+		: 'Show sensitive details';
+
+	return (
+		<Tooltip>
+			<TooltipTrigger
+				delay={200}
+				render={
+					<Button
+						type="button"
+						variant="ghost"
+						size="icon"
+						aria-label={label}
+						aria-pressed={revealed}
+						onClick={onToggle}
+						className={cn(
+							'size-9 shrink-0 rounded-full border shadow-none',
+							'transition-[background-color,color,border-color,transform,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]',
+							'active:scale-[0.97]',
+							'focus-visible:ring-2 focus-visible:ring-offset-1',
+							inverted
+								? cn(
+										'focus-visible:ring-white/50 focus-visible:ring-offset-primary',
+										revealed
+											? 'border-white bg-white text-primary shadow-[0_1px_0_rgb(0_0_0/0.08)] hover:bg-white hover:text-primary'
+											: 'border-white/45 bg-white/25 text-primary-foreground hover:border-white/70 hover:bg-white/35 hover:text-primary-foreground'
+									)
+								: cn(
+										'focus-visible:ring-primary/30 focus-visible:ring-offset-background',
+										revealed
+											? 'border-primary bg-primary text-white hover:bg-primary/90 hover:text-white'
+											: 'border-border bg-secondary text-foreground hover:border-primary/40 hover:bg-secondary hover:text-primary'
+									)
+						)}
+					>
+						{revealed ? (
+							<EyeOffIcon className="size-4.5" strokeWidth={2.25} />
+						) : (
+							<EyeIcon className="size-4.5" strokeWidth={2.25} />
+						)}
+					</Button>
+				}
+			/>
+			<TooltipContent side="left" className="max-w-56 text-pretty">
+				{revealed
+					? 'Hide IP, ASN, and coordinates'
+					: 'Reveal IP, ASN, and coordinates'}
+			</TooltipContent>
+		</Tooltip>
+	);
+}
+
 /** Visitor geo / network intelligence. */
 export function VisitorIntelligenceCard({
 	className,
@@ -114,6 +185,7 @@ export function VisitorIntelligenceCard({
 	const demoIp = searchParams.get('ip') ?? undefined;
 	const { data, meta, isLoading, isError, error, refetch } = useGeo(demoIp);
 	const inverted = tone === 'aubergine';
+	const [showSensitive, setShowSensitive] = useState(false);
 
 	const errorMessage =
 		error instanceof ApiClientError
@@ -159,7 +231,9 @@ export function VisitorIntelligenceCard({
 						<div className="min-w-0 space-y-1">
 							<p className="flex items-center gap-2 text-base font-semibold tracking-tight">
 								{countryFlagEmoji(data.countryCode) ? (
-									<span aria-hidden>{countryFlagEmoji(data.countryCode)}</span>
+									<span aria-hidden>
+										{countryFlagEmoji(data.countryCode)}
+									</span>
 								) : null}
 								<span className="truncate">
 									{displayValue(data.country, 'Unknown')}
@@ -178,14 +252,21 @@ export function VisitorIntelligenceCard({
 								{displayValue(data.region, 'Unknown')}
 							</p>
 						</div>
-						<NetworkBadge
-							networkType={data.networkType}
-							className={
-								inverted
-									? 'bg-white/15 text-primary-foreground'
-									: undefined
-							}
-						/>
+						<div className="flex shrink-0 items-center gap-1.5">
+							<NetworkBadge
+								networkType={data.networkType}
+								className={
+									inverted
+										? 'bg-white/15 text-primary-foreground'
+										: undefined
+								}
+							/>
+							<SensitiveDetailsToggle
+								revealed={showSensitive}
+								onToggle={() => setShowSensitive((v) => !v)}
+								inverted={inverted}
+							/>
+						</div>
 					</div>
 
 					<ConfidenceMeter
@@ -193,13 +274,21 @@ export function VisitorIntelligenceCard({
 						inverted={inverted}
 					/>
 
+					<p
+						className={cn(
+							'text-caption-sm text-pretty',
+							inverted
+								? 'text-[var(--on-aubergine-mute)]'
+								: 'text-muted-foreground'
+						)}
+						role="note"
+					>
+						{showSensitive
+							? 'Sensitive details are visible. Hide them with the eye icon before sharing your screen.'
+							: 'IP, ASN, and coordinates stay hidden by default. Use the eye icon to reveal them.'}
+					</p>
+
 					<div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-						<Field
-							label="IP"
-							value={displayValue(data.ip)}
-							mono
-							inverted={inverted}
-						/>
 						<Field
 							label="Timezone"
 							value={displayValue(data.timezone, 'Unknown')}
@@ -216,34 +305,44 @@ export function VisitorIntelligenceCard({
 							value={displayValue(data.isp, 'Unknown')}
 							inverted={inverted}
 						/>
-						<Field
-							label="Organization"
-							value={displayValue(data.organization, 'Unknown')}
-							inverted={inverted}
-						/>
-						<Field
-							label="ASN"
-							value={displayValue(data.asn, 'Unknown')}
-							mono
-							inverted={inverted}
-						/>
-						<Field
-							label="ASN name"
-							value={displayValue(data.asnName, 'Unknown')}
-							inverted={inverted}
-						/>
-						<Field
-							label="Latitude"
-							value={displayValue(data.latitude, '—')}
-							mono
-							inverted={inverted}
-						/>
-						<Field
-							label="Longitude"
-							value={displayValue(data.longitude, '—')}
-							mono
-							inverted={inverted}
-						/>
+						{showSensitive ? (
+							<>
+								<Field
+									label="IP"
+									value={displayValue(data.ip)}
+									mono
+									inverted={inverted}
+								/>
+								<Field
+									label="Organization"
+									value={displayValue(data.organization, 'Unknown')}
+									inverted={inverted}
+								/>
+								<Field
+									label="ASN"
+									value={displayValue(data.asn, 'Unknown')}
+									mono
+									inverted={inverted}
+								/>
+								<Field
+									label="ASN name"
+									value={displayValue(data.asnName, 'Unknown')}
+									inverted={inverted}
+								/>
+								<Field
+									label="Latitude"
+									value={displayValue(data.latitude, '—')}
+									mono
+									inverted={inverted}
+								/>
+								<Field
+									label="Longitude"
+									value={displayValue(data.longitude, '—')}
+									mono
+									inverted={inverted}
+								/>
+							</>
+						) : null}
 					</div>
 				</div>
 			) : null}

@@ -20,7 +20,7 @@ export function VisitorSkeleton() {
 				<Skeleton className="h-1.5 w-full rounded-full" />
 			</div>
 			<div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-				{Array.from({ length: 9 }).map((_, i) => (
+				{Array.from({ length: 3 }).map((_, i) => (
 					<div key={i} className="space-y-1">
 						<Skeleton className="h-2.5 w-12" />
 						<Skeleton className="h-4 w-full" />

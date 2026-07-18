@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { ArrowUpRightIcon } from 'lucide-react';
 
 import { SectionCard } from '@/components/common/SectionCard';
-import { VisitorSkeleton } from '@/components/common/LoadingSkeletons';
+import {
+	SectionSkeletonBody,
+	VisitorSkeleton,
+} from '@/components/common/LoadingSkeletons';
 import { VisitorIntelligenceCard } from '@/components/dashboard/VisitorIntelligenceCard';
 import {
 	PageInsight,
@@ -18,7 +21,7 @@ import { useGeo } from '@/hooks/useGeo';
 
 export function VisitorPageClient() {
 	const metrics = useVisitorMetrics();
-	const { data: geo } = useGeo();
+	const { data: geo, isLoading: geoLoading } = useGeo();
 
 	return (
 		<DashboardPageShell metrics={metrics}>
@@ -51,37 +54,43 @@ export function VisitorPageClient() {
 					}
 					className="rounded-md border border-hairline bg-surface-card ring-0 dark:border-border"
 				>
-					<ul className="space-y-3 text-sm text-muted-foreground">
-						<li className="flex gap-2">
-							<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-							<span>
-								Market prices render in your effective currency
-								({geo?.currency ?? 'detected or override'}).
-							</span>
-						</li>
-						<li className="flex gap-2">
-							<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-							<span>
-								News prefers headlines relevant to{' '}
-								{geo?.countryCode ?? 'your region'}.
-							</span>
-						</li>
-						<li className="flex gap-2">
-							<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-							<span>
-								Network type helps explain latency and mobile vs
-								fixed connections.
-							</span>
-						</li>
-					</ul>
-					<Button
-						render={<Link href="/dashboard/market" />}
-						nativeButton={false}
-						className="mt-4 h-10 w-full rounded-full font-bold text-white"
-					>
-						View market
-						<ArrowUpRightIcon className="size-4" />
-					</Button>
+					{geoLoading ? (
+						<SectionSkeletonBody rows={4} />
+					) : (
+						<>
+							<ul className="space-y-3 text-sm text-muted-foreground">
+								<li className="flex gap-2">
+									<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+									<span>
+										Market prices render in your effective currency
+										({geo?.currency ?? 'detected or override'}).
+									</span>
+								</li>
+								<li className="flex gap-2">
+									<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+									<span>
+										News prefers headlines relevant to{' '}
+										{geo?.countryCode ?? 'your region'}.
+									</span>
+								</li>
+								<li className="flex gap-2">
+									<span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+									<span>
+										Network type helps explain latency and mobile vs
+										fixed connections.
+									</span>
+								</li>
+							</ul>
+							<Button
+								render={<Link href="/dashboard/market" />}
+								nativeButton={false}
+								className="mt-4 h-10 w-full rounded-full font-bold text-white"
+							>
+								View market
+								<ArrowUpRightIcon className="size-4" />
+							</Button>
+						</>
+					)}
 				</SectionCard>
 			</section>
 

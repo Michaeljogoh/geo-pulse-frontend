@@ -23,9 +23,6 @@ import {
 import { useOverviewMetrics } from '@/components/dashboard/page-metrics';
 import { DashboardPageShell } from '@/components/dashboard/page-shell';
 import { navGroups } from '@/components/app-shared';
-import { Suspense } from 'react';
-import { SectionCard } from '@/components/common/SectionCard';
-import { VisitorSkeleton } from '@/components/common/LoadingSkeletons';
 
 const quickLinks =
 	navGroups[0]?.items.filter((i) => i.path !== '/dashboard') ?? [];
@@ -87,18 +84,7 @@ export function OverviewPageClient() {
 			</section>
 
 			<section className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-				<Suspense
-					fallback={
-						<SectionCard
-							title="Visitor intelligence"
-							className="rounded-md border-0 bg-primary text-primary-foreground ring-0"
-						>
-							<VisitorSkeleton />
-						</SectionCard>
-					}
-				>
-					<VisitorIntelligenceCard tone="aubergine" />
-				</Suspense>
+				<VisitorIntelligenceCard tone="aubergine" />
 				<WatchlistPanel className="rounded-md border border-hairline bg-surface-card ring-0 dark:border-border" />
 				<div className="lg:col-span-2">
 					<MarketOverview className="rounded-md border border-hairline bg-surface-card ring-0 dark:border-border" />

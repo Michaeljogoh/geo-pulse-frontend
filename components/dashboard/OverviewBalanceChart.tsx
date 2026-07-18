@@ -26,6 +26,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { OverviewChartSkeleton } from '@/components/dashboard/page-skeletons';
 import { useEffectiveCurrency } from '@/hooks/useEffectiveCurrency';
 import { useGeo } from '@/hooks/useGeo';
 import { useMarket } from '@/hooks/useMarket';
@@ -253,8 +254,8 @@ export function OverviewBalanceChart() {
 
 	const selected =
 		coins.find((c) => c.id === selectedCoinId) ?? coins[0] ?? null;
-	const endValue = selected?.currentPrice ?? 15_500;
-	const changePct = selected?.priceChangePct24h ?? 5.28;
+	const endValue = selected?.currentPrice ?? 0;
+	const changePct = selected?.priceChangePct24h ?? 0;
 	const currency = selected?.currency ?? vs;
 	const coinId = selected?.id ?? 'market';
 
@@ -264,6 +265,10 @@ export function OverviewBalanceChart() {
 	);
 
 	const isUp = changePct >= 0;
+
+	if (isLoading) {
+		return <OverviewChartSkeleton />;
+	}
 
 	return (
 		<section
@@ -282,37 +287,39 @@ export function OverviewBalanceChart() {
 							coins={coins}
 							value={selected?.id ?? ''}
 							onChange={setSelectedCoinId}
-							disabled={isLoading}
 						/>
 					</div>
 					<div className="flex flex-wrap items-baseline gap-2.5">
-						<p
-							className={cn(
-								'font-heading text-3xl font-bold tracking-tight text-foreground tabular-nums sm:text-[2rem]',
-								isLoading && 'opacity-60'
-							)}
-						>
-							{formatCurrency(endValue, currency, locale)}
+						<p className="font-heading text-3xl font-bold tracking-tight text-foreground tabular-nums sm:text-[2rem]">
+							{selected
+								? formatCurrency(endValue, currency, locale)
+								: '—'}
 						</p>
-						<span
-							className={cn(
-								'inline-flex items-center gap-0.5 text-sm font-semibold tabular-nums',
-								isUp ? 'text-gain' : 'text-loss'
-							)}
-						>
-							{isUp ? (
-								<ArrowUpIcon className="size-3.5" aria-hidden />
-							) : (
-								<ArrowDownIcon className="size-3.5" aria-hidden />
-							)}
-							{formatPercent(changePct).replace(/^[+-]/, '')}
-						</span>
+						{selected ? (
+							<span
+								className={cn(
+									'inline-flex items-center gap-0.5 text-sm font-semibold tabular-nums',
+									isUp ? 'text-gain' : 'text-loss'
+								)}
+							>
+								{isUp ? (
+									<ArrowUpIcon className="size-3.5" aria-hidden />
+								) : (
+									<ArrowDownIcon className="size-3.5" aria-hidden />
+								)}
+								{formatPercent(changePct).replace(/^[+-]/, '')}
+							</span>
+						) : null}
 					</div>
 					{selected ? (
 						<p className="text-caption-sm text-muted-foreground">
 							{selected.name}
 						</p>
-					) : null}
+					) : (
+						<p className="text-caption-sm text-muted-foreground">
+							Market data unavailable
+						</p>
+					)}
 				</div>
 
 				<div
@@ -329,6 +336,7 @@ export function OverviewBalanceChart() {
 								role="tab"
 								aria-selected={active}
 								onClick={() => setRange(key)}
+								disabled={!selected}
 								className={cn(
 									'rounded-full px-2.5 py-1.5 text-xs font-bold tracking-wide transition-[color,background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]',
 									'active:scale-[0.97]',
@@ -344,72 +352,78 @@ export function OverviewBalanceChart() {
 				</div>
 			</div>
 
-			<ChartContainer
-				className="mt-6 aspect-auto h-[240px] w-full p-0 sm:h-[280px]"
-				config={chartConfig}
-			>
-				<LineChart
-					accessibilityLayer
-					data={series}
-					margin={{ left: 4, right: 8, top: 12, bottom: 0 }}
+			{selected ? (
+				<ChartContainer
+					className="mt-6 aspect-auto h-[240px] w-full p-0 sm:h-[280px]"
+					config={chartConfig}
 				>
-					<CartesianGrid
-						horizontal
-						vertical={false}
-						stroke="var(--hairline)"
-						strokeDasharray="0"
-						className="opacity-80 dark:opacity-40"
-					/>
-					<YAxis
-						dataKey="pct"
-						domain={[0, 100]}
-						ticks={[0, 20, 40, 60, 80, 100]}
-						tickFormatter={(v) => `${String(v).padStart(2, '0')}%`}
-						axisLine={false}
-						tickLine={false}
-						width={40}
-						tick={{ fill: 'var(--mute)', fontSize: 11 }}
-					/>
-					<XAxis
-						dataKey="date"
-						axisLine={false}
-						tickLine={false}
-						tickMargin={10}
-						minTickGap={28}
-						tickFormatter={(value) =>
-							formatDate(String(value), 'day-month')
-						}
-						tick={{ fill: 'var(--mute)', fontSize: 11 }}
-					/>
-					<ChartTooltip
-						cursor={{
-							stroke: 'var(--gain)',
-							strokeWidth: 1,
-							strokeDasharray: '4 4',
-						}}
-						content={
-							<BalanceTooltip currency={currency} locale={locale} />
-						}
-					/>
-					<Line
-						type="monotone"
-						dataKey="pct"
-						stroke="var(--color-value)"
-						strokeWidth={2}
-						dot={false}
-						activeDot={{
-							r: 6,
-							fill: 'var(--gain)',
-							stroke: 'var(--gain)',
-							strokeWidth: 0,
-							filter: 'drop-shadow(0 0 6px rgb(0 122 90 / 0.55))',
-						}}
-						isAnimationActive
-						animationDuration={280}
-						animationEasing="ease-out"
-					/>
-				</LineChart>
-			</ChartContainer>
+					<LineChart
+						accessibilityLayer
+						data={series}
+						margin={{ left: 4, right: 8, top: 12, bottom: 0 }}
+					>
+						<CartesianGrid
+							horizontal
+							vertical={false}
+							stroke="var(--hairline)"
+							strokeDasharray="0"
+							className="opacity-80 dark:opacity-40"
+						/>
+						<YAxis
+							dataKey="pct"
+							domain={[0, 100]}
+							ticks={[0, 20, 40, 60, 80, 100]}
+							tickFormatter={(v) => `${String(v).padStart(2, '0')}%`}
+							axisLine={false}
+							tickLine={false}
+							width={40}
+							tick={{ fill: 'var(--mute)', fontSize: 11 }}
+						/>
+						<XAxis
+							dataKey="date"
+							axisLine={false}
+							tickLine={false}
+							tickMargin={10}
+							minTickGap={28}
+							tickFormatter={(value) =>
+								formatDate(String(value), 'day-month')
+							}
+							tick={{ fill: 'var(--mute)', fontSize: 11 }}
+						/>
+						<ChartTooltip
+							cursor={{
+								stroke: 'var(--gain)',
+								strokeWidth: 1,
+								strokeDasharray: '4 4',
+							}}
+							content={
+								<BalanceTooltip currency={currency} locale={locale} />
+							}
+						/>
+						<Line
+							type="monotone"
+							dataKey="pct"
+							stroke="var(--color-value)"
+							strokeWidth={2}
+							dot={false}
+							activeDot={{
+								r: 6,
+								fill: 'var(--gain)',
+								stroke: 'var(--gain)',
+								strokeWidth: 0,
+								filter: 'drop-shadow(0 0 6px rgb(0 122 90 / 0.55))',
+							}}
+							isAnimationActive
+							animationDuration={280}
+							animationEasing="ease-out"
+						/>
+					</LineChart>
+				</ChartContainer>
+			) : (
+				<div className="mt-6 flex h-[240px] items-center justify-center rounded-md bg-muted/40 sm:h-[280px]">
+					<p className="text-sm text-muted-foreground">No chart data yet</p>
+				</div>
+			)}
 		</section>
 	);
 }

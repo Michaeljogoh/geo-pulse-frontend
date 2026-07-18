@@ -14,7 +14,7 @@ function useIsClient() {
 }
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  const { theme = "light" } = useTheme()
   const mounted = useIsClient()
 
   if (!mounted) {

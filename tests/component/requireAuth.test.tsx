@@ -66,5 +66,18 @@ describe('RequireAuth', () => {
 		});
 
 		expect(screen.queryByText('Secret dashboard')).toBeNull();
+		expect(screen.getByLabelText('Checking session')).toBeTruthy();
+	});
+
+	it('keeps main fallback visible while redirecting (no blank full page)', async () => {
+		render(
+			<RequireAuth>
+				<p>Secret dashboard</p>
+			</RequireAuth>,
+			{ wrapper: Wrapper }
+		);
+
+		expect(screen.getByLabelText('Checking session')).toBeTruthy();
+		expect(screen.queryByText('Secret dashboard')).toBeNull();
 	});
 });

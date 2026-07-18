@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
+import { DashboardMainFallback } from '@/components/dashboard/page-skeletons';
 import { useAuth } from '@/hooks/useAuth';
 import {
 	clearAuthSessionCookie,
@@ -16,6 +17,9 @@ export { safeAuthNextPath } from '@/lib/auth-session-cookie';
  * Client gate for Firebase Auth — dashboard is authenticated-only.
  * Guests are usually redirected by proxy (cookie) before this mounts.
  * With a session cookie, render optimistically while Firebase hydrates.
+ *
+ * Must wrap only main-page children inside AppShell so sidebar/header
+ * stay mounted during auth hydration and route transitions.
  */
 export function RequireAuth({ children }: { children: ReactNode }) {
 	const { status } = useAuth();
@@ -34,13 +38,5 @@ export function RequireAuth({ children }: { children: ReactNode }) {
 		return children;
 	}
 
-	return (
-		<div
-			className="min-h-svh bg-background"
-			aria-busy="true"
-			aria-label="Loading"
-		>
-			<span className="sr-only">Loading</span>
-		</div>
-	);
+	return <DashboardMainFallback label="Checking session" />;
 }

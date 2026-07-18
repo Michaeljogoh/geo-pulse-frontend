@@ -85,6 +85,36 @@ function PageSkeletonShell({ children }: { children: ReactNode }) {
 	);
 }
 
+/**
+ * Main-slot fallback while auth hydrates or redirects.
+ * Used inside AppShell so sidebar/header stay visible.
+ */
+export function DashboardMainFallback({
+	label = 'Loading',
+}: {
+	label?: string;
+}) {
+	return (
+		<div
+			className="flex flex-col gap-6"
+			data-slot="dashboard-main-fallback"
+			aria-busy="true"
+			aria-label={label}
+		>
+			<span className="sr-only">{label}</span>
+			<MetricsSkeletonGrid />
+			<InsightSkeleton />
+			<section className={cn(cardClass, 'p-5')}>
+				<div className="space-y-3">
+					<Skeleton className="h-4 w-32" />
+					<Skeleton className="h-3 w-48" />
+					<Skeleton className="mt-4 h-40 w-full rounded-md" />
+				</div>
+			</section>
+		</div>
+	);
+}
+
 /** `/dashboard` overview route loading UI. */
 export function OverviewPageSkeleton() {
 	return (
